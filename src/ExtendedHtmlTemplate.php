@@ -11,6 +11,7 @@ use ReflectionClass;
 class ExtendedHtmlTemplate extends HtmlTemplate
 {
 
+    //defined for easy extension of locale in child classes
     protected string $dateTimeFormat = '';
     protected string $dateFormat = '';
     protected string $timeFormat = '';

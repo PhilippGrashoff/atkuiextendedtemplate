@@ -1,15 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace atkuigermantemplate\tests;
+namespace atkuiextendedtemplate\tests;
 
 use atk4\data\Model;
+use Atk4\Ui\App;
 use DateTime;
-use PMRAtk\App\App;
-use PMRAtk\tests\phpunit\TestCase;
-use PMRAtk\tests\TestClasses\BaseModelClasses\JustABaseModel;
-use PMRAtk\View\Template;
-use settingsforatk\Setting;
-use settingsforatk\SettingGroup;
 
 class TemplateTest extends TestCase
 {
@@ -24,45 +19,7 @@ class TemplateTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->app = new App(['nologin'], ['always_run' => false]);
-    }
-
-    public function testSTDValues()
-    {
-        $persistence = $this->getSqliteTestPersistence();
-        $this->app->db = $persistence;
-        $persistence->app = $this->app;
-
-        $template = new Template();
-        $template->app = $this->app;
-        $this->app->addSetting('STD_DADAPRA', 'LALA');
-        $template->loadTemplateFromString('Hallo {$STD_DADAPRA} Test');
-        $template->setSTDValues();
-        self::assertTrue(strpos($template->render(), 'LALA') !== false);
-    }
-
-    protected function getTestModel(): Model
-    {
-        $class = new class extends Model {
-            public $table = 'blalba';
-
-            protected function init(): void
-            {
-                parent::init();
-                $this->addFields(
-                    [
-                        ['name', 'type' => 'string'],
-                        ['value', 'type' => 'integer'],
-                        ['text', 'type' => 'text'],
-                        ['datetime', 'type' => 'datetime'],
-                        ['date', 'type' => 'date'],
-                        ['time', 'type' => 'time'],
-                    ]
-                );
-            }
-        };
-
-        return new $class($this->app->db);
+        $this->app = new App(['always_run' => false]);
     }
 
     public function testSetTagsFromModel()
@@ -198,22 +155,28 @@ class TemplateTest extends TestCase
         self::assertEquals($ex, $t->render());
     }
 
-    public function testReplaceHTML()
+    protected function getTestModel(): Model
     {
-        $t = new Template();
-        $t->app = $this->app;
-        $t->loadTemplateFromString('Hallo {SomeRegion}{/SomeRegion} Test');
+        $class = new class extends Model {
+            public $table = 'blalba';
 
-        $t->appendHTML('SomeRegion', '<div>Buzz</div>');
-        self::assertSame(
-            'Hallo <div>Buzz</div> Test',
-            $t->render()
-        );
+            protected function init(): void
+            {
+                parent::init();
+                $this->addFields(
+                    [
+                        ['name', 'type' => 'string'],
+                        ['value', 'type' => 'integer'],
+                        ['text', 'type' => 'text'],
+                        ['datetime', 'type' => 'datetime'],
+                        ['date', 'type' => 'date'],
+                        ['time', 'type' => 'time'],
+                    ]
+                );
+            }
+        };
 
-        $t->replaceHTML('SomeRegion', '<span>Wizz</span>');
-        self::assertSame(
-            'Hallo <span>Wizz</span> Test',
-            $t->render()
-        );
+        return new $class($this->app->db);
     }
+
 }

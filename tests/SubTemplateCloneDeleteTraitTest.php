@@ -1,64 +1,43 @@
 <?php declare(strict_types=1);
 
-namespace atkuigermantemplate\tests;
+namespace atkuiextendedtemplate\tests;
 
-use atk4\ui\Template;
+use Atk4\Core\AtkPhpunit\TestCase;
+use Atk4\Ui\HtmlTemplate;
 use atk4\ui\View;
-use PMRAtk\tests\phpunit\TestCase;
-use PMRAtk\View\Traits\SubTemplateCloneDeleteTrait;
+use atkuiextendedtemplate\SubTemplateCloneDeleteTrait;
+use atkuiextendedtemplate\tests\testclasses\ViewWithSubTemplateCloneTrait;
 
-class SubTemplateCloneDeleteTraitTest extends TestCase {
+class SubTemplateCloneDeleteTraitTest extends TestCase
+{
 
-    /**
-     *
-     */
-    public function testtemplateCloneAndDelete() {
-        $view = $this->getTCADTestClass();
-        $view->template = new Template();
-        $view->template->loadTemplateFromString('Hans{Lala}test1{/Lala}{Dada}test2{/Dada}');
+    public function testTemplateCloneAndDelete(): void
+    {
+        $view = new ViewWithSubTemplateCloneTrait();
+        $view->template = new HtmlTemplate();
+        $view->template->loadFromString('Hans{Lala}test1{/Lala}{Dada}test2{/Dada}');
         $view->templateCloneAndDelete(['Lala', 'Dada']);
-        self::assertEquals('test1', $view->_tLala->render());
-        self::assertEquals('test2', $view->_tDada->render());
+        self::assertEquals('test1', $view->_tLala->renderToHtml());
+        self::assertEquals('test2', $view->_tDada->renderToHtml());
     }
 
-
-    /**
-     *
-     */
-    public function testtemplateCloneAndDeleteWithoutArgs() {
-        $view = $this->getTCADTestClass();
-        $view->template = new Template();
-        $view->template->loadTemplateFromString('Hans{Lala}test1{/Lala}{Dada}test2{/Dada}');
+    public function testTemplateCloneAndDeleteWithoutArgs(): void
+    {
+        $view = new ViewWithSubTemplateCloneTrait();
+        $view->template = new HtmlTemplate();
+        $view->template->loadFromString('Hans{Lala}test1{/Lala}{Dada}test2{/Dada}');
         $view->templateCloneAndDelete();
-        self::assertEquals('test1', $view->_tLala->render());
-        self::assertEquals('test2', $view->_tDada->render());
+        self::assertEquals('test1', $view->_tLala->renderToHtml());
+        self::assertEquals('test2', $view->_tDada->renderToHtml());
     }
 
-
-    /**
-     *
-     */
-    public function testwithNonExistantRegion() {
-        $view = $this->getTCADTestClass();
-        $view->template = new Template();
-        $view->template->loadTemplateFromString('Hans{Lala}test1{/Lala}{Dada}test2{/Dada}');
+    public function testCloneAndDeleteWithNonExistantRegion(): void
+    {
+        $view = new ViewWithSubTemplateCloneTrait();
+        $view->template = new HtmlTemplate();
+        $view->template->loadFromString('Hans{Lala}test1{/Lala}{Dada}test2{/Dada}');
         $view->templateCloneAndDelete(['Lala', 'Dada', 'NonExistantRegion']);
-        self::assertEquals('test1', $view->_tLala->render());
-        self::assertEquals('test2', $view->_tDada->render());
-    }
-
-
-    /**
-     *
-     */
-    protected function getTCADTestClass(): View {
-        $class = new class extends View {
-            use SubTemplateCloneDeleteTrait;
-
-            public $_tLala;
-            public $_tDada;
-        };
-
-        return new $class();
+        self::assertEquals('test1', $view->_tLala->renderToHtml());
+        self::assertEquals('test2', $view->_tDada->renderToHtml());
     }
 }
