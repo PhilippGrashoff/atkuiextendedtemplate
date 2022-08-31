@@ -17,8 +17,8 @@ class SubTemplateCloneDeleteTraitTest extends TestCase
         $view->template = new HtmlTemplate();
         $view->template->loadFromString('Hans{Lala}test1{/Lala}{Dada}test2{/Dada}');
         $view->templateCloneAndDelete(['Lala', 'Dada']);
-        self::assertEquals('test1', $view->_tLala->renderToHtml());
-        self::assertEquals('test2', $view->_tDada->renderToHtml());
+        self::assertSame('test1', $view->_tLala->renderToHtml());
+        self::assertSame('test2', $view->_tDada->renderToHtml());
     }
 
     public function testTemplateCloneAndDeleteWithoutArgs(): void
@@ -27,8 +27,8 @@ class SubTemplateCloneDeleteTraitTest extends TestCase
         $view->template = new HtmlTemplate();
         $view->template->loadFromString('Hans{Lala}test1{/Lala}{Dada}test2{/Dada}');
         $view->templateCloneAndDelete();
-        self::assertEquals('test1', $view->_tLala->renderToHtml());
-        self::assertEquals('test2', $view->_tDada->renderToHtml());
+        self::assertSame('test1', $view->_tLala->renderToHtml());
+        self::assertSame('test2', $view->_tDada->renderToHtml());
     }
 
     public function testCloneAndDeleteWithNonExistantRegion(): void
@@ -37,7 +37,7 @@ class SubTemplateCloneDeleteTraitTest extends TestCase
         $view->template = new HtmlTemplate();
         $view->template->loadFromString('Hans{Lala}test1{/Lala}{Dada}test2{/Dada}');
         $view->templateCloneAndDelete(['Lala', 'Dada', 'NonExistantRegion']);
-        self::assertEquals('test1', $view->_tLala->renderToHtml());
-        self::assertEquals('test2', $view->_tDada->renderToHtml());
+        self::assertSame('test1', $view->_tLala->renderToHtml());
+        self::assertSame('test2', $view->_tDada->renderToHtml());
     }
 }

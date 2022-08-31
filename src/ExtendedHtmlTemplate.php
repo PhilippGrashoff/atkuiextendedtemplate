@@ -3,15 +3,14 @@
 namespace atkuiextendedtemplate;
 
 use Atk4\Data\Field;
-use atk4\data\Model;
-use atk4\ui\HtmlTemplate;
+use Atk4\Data\Model;
+use Atk4\Ui\HtmlTemplate;
 use DateTimeInterFace;
 use ReflectionClass;
 
 class ExtendedHtmlTemplate extends HtmlTemplate
 {
 
-    //defined for easy extension of locale in child classes
     protected string $dateTimeFormat = '';
     protected string $dateFormat = '';
     protected string $timeFormat = '';
@@ -101,6 +100,15 @@ class ExtendedHtmlTemplate extends HtmlTemplate
         return (string)$field->get();
     }
 
+    public function setDateTimeFormats(string $dateTimeFormat, string $dateFormat, string $timeFormat): void {
+        //TODO check if formats are valid?
+        $this->dateTimeFormat = $dateTimeFormat;
+        $this->dateFormat = $dateFormat;
+        $this->timeFormat = $timeFormat;
+    }
+
+    //TODO when properties in Persistence/UI are renamed to camel case, use this 3 methods as a wrapper,
+    // put simple but duplicate logic in separate method.
     protected function getDesiredDateTimeFormat(): string
     {
         if (

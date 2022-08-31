@@ -12,5 +12,3 @@ class ViewWithSubTemplateCloneTrait extends View
     public $_tLala;
     public $_tDada;
 }
-
-;
